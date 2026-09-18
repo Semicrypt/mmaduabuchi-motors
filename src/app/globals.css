@@ -1,26 +1,251 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+* {
+  box-sizing: border-box;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  background: #f6f0e6;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  margin: 0;
+  overflow-x: hidden;
+  background: #f6f0e6;
+  color: #211a13;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.font-display {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+::selection {
+  background: #c69a48;
+  color: #17110c;
+}
+
+/* NAVIGATION */
+
+.nav-link {
+  position: relative;
+  padding: 31px 0;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    #9c6b1e,
+    #d8b464
+  );
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #8a5e19;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* GOLD HEADLINE */
+
+.gold-text {
+  background: linear-gradient(
+    110deg,
+    #92631a 0%,
+    #d7aa4d 35%,
+    #f0d28a 53%,
+    #b77d20 78%,
+    #8f6019 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* HERO CAR */
+
+.hero-car {
+  filter:
+    contrast(1.05)
+    saturate(0.9);
+  mix-blend-mode: multiply;
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 72% 65% at center,
+    black 45%,
+    rgba(0, 0, 0, 0.97) 57%,
+    transparent 86%
+  );
+
+  mask-image: radial-gradient(
+    ellipse 72% 65% at center,
+    black 45%,
+    rgba(0, 0, 0, 0.97) 57%,
+    transparent 86%
+  );
+}
+
+/* MOVING ROAD LIGHTS */
+
+.road-streak {
+  position: absolute;
+  height: 4px;
+  width: 380px;
+  border-radius: 100%;
+  opacity: 0.35;
+  filter: blur(5px);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #d9a33f,
+    #fff1c4,
+    transparent
+  );
+}
+
+.road-streak-one {
+  bottom: 170px;
+  left: -400px;
+  animation: streakOne 6s linear infinite;
+}
+
+.road-streak-two {
+  bottom: 125px;
+  left: -600px;
+  animation: streakTwo 8s linear infinite 2s;
+}
+
+@keyframes streakOne {
+  from {
+    transform: translateX(0) rotate(-3deg);
+  }
+
+  to {
+    transform: translateX(1900px) rotate(-3deg);
+  }
+}
+
+@keyframes streakTwo {
+  from {
+    transform: translateX(0) rotate(-2deg);
+  }
+
+  to {
+    transform: translateX(2100px) rotate(-2deg);
+  }
+}
+
+/* BRANDS */
+
+.brand-marquee {
+  width: 100%;
+}
+
+.brand-name {
+  white-space: nowrap;
+  color: #696056;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.brand-name:hover {
+  color: #a87624;
+  transform: scale(1.04);
+}
+
+/* COLLECTION */
+
+.collection-card {
+  isolation: isolate;
+}
+
+/* VEHICLE CARDS */
+
+.vehicle-card {
+  border: 1px solid rgba(130, 94, 38, 0.14);
+  box-shadow:
+    0 25px 70px rgba(79, 55, 23, 0.07);
+
+  transition:
+    box-shadow 0.35s ease,
+    transform 0.35s ease;
+}
+
+.vehicle-card:hover {
+  box-shadow:
+    0 35px 90px rgba(79, 55, 23, 0.15);
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f2eadf;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b58635;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8c6423;
+}
+
+/* MOBILE */
+
+@media (max-width: 1023px) {
+  .hero-car {
+    max-height: 480px;
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-car {
+    width: 120%;
+    max-width: none;
+    margin-left: -10%;
+  }
+
+  .road-streak {
+    opacity: 0.2;
+  }
+}
+
+/* RESPECT ACCESSIBILITY SETTINGS */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .road-streak-one,
+  .road-streak-two {
+    animation: none;
+  }
+
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
