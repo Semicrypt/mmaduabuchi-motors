@@ -1,20 +1,32 @@
 @import "tailwindcss";
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 html {
+  width: 100%;
+  max-width: 100%;
   scroll-behavior: smooth;
   background: #f6f0e6;
 }
 
 body {
   margin: 0;
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
   background: #f6f0e6;
   color: #211a13;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
 }
 
 .font-display {
@@ -57,7 +69,7 @@ body {
   width: 100%;
 }
 
-/* GOLD HEADLINE */
+/* GOLD TEXT */
 
 .gold-text {
   background: linear-gradient(
@@ -68,6 +80,7 @@ body {
     #b77d20 78%,
     #8f6019 100%
   );
+
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -76,35 +89,38 @@ body {
 /* HERO CAR */
 
 .hero-car {
+  display: block;
   filter:
-    contrast(1.05)
-    saturate(0.9);
+    contrast(1.04)
+    saturate(0.92);
+
   mix-blend-mode: multiply;
 
   -webkit-mask-image: radial-gradient(
-    ellipse 72% 65% at center,
-    black 45%,
-    rgba(0, 0, 0, 0.97) 57%,
-    transparent 86%
+    ellipse 76% 68% at center,
+    black 46%,
+    rgba(0, 0, 0, 0.97) 61%,
+    transparent 90%
   );
 
   mask-image: radial-gradient(
-    ellipse 72% 65% at center,
-    black 45%,
-    rgba(0, 0, 0, 0.97) 57%,
-    transparent 86%
+    ellipse 76% 68% at center,
+    black 46%,
+    rgba(0, 0, 0, 0.97) 61%,
+    transparent 90%
   );
 }
 
-/* MOVING ROAD LIGHTS */
+/* ROAD LIGHTS */
 
 .road-streak {
   position: absolute;
-  height: 4px;
   width: 380px;
+  height: 4px;
   border-radius: 100%;
   opacity: 0.35;
   filter: blur(5px);
+
   background: linear-gradient(
     90deg,
     transparent,
@@ -150,14 +166,16 @@ body {
 
 .brand-marquee {
   width: 100%;
+  max-width: 100%;
 }
 
 .brand-name {
   white-space: nowrap;
   color: #696056;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.07em;
+
   transition:
     color 0.3s ease,
     transform 0.3s ease;
@@ -178,6 +196,7 @@ body {
 
 .vehicle-card {
   border: 1px solid rgba(130, 94, 38, 0.14);
+
   box-shadow:
     0 25px 70px rgba(79, 55, 23, 0.07);
 
@@ -189,6 +208,33 @@ body {
 .vehicle-card:hover {
   box-shadow:
     0 35px 90px rgba(79, 55, 23, 0.15);
+}
+
+/* MOBILE */
+
+@media (max-width: 639px) {
+  .hero-car {
+    width: 100%;
+    max-width: 100%;
+
+    -webkit-mask-image: radial-gradient(
+      ellipse 85% 72% at center,
+      black 50%,
+      rgba(0, 0, 0, 0.96) 69%,
+      transparent 96%
+    );
+
+    mask-image: radial-gradient(
+      ellipse 85% 72% at center,
+      black 50%,
+      rgba(0, 0, 0, 0.96) 69%,
+      transparent 96%
+    );
+  }
+
+  .brand-name {
+    font-size: 11px;
+  }
 }
 
 /* SCROLLBAR */
@@ -210,28 +256,7 @@ body {
   background: #8c6423;
 }
 
-/* MOBILE */
-
-@media (max-width: 1023px) {
-  .hero-car {
-    max-height: 480px;
-    object-fit: contain;
-  }
-}
-
-@media (max-width: 640px) {
-  .hero-car {
-    width: 120%;
-    max-width: none;
-    margin-left: -10%;
-  }
-
-  .road-streak {
-    opacity: 0.2;
-  }
-}
-
-/* RESPECT ACCESSIBILITY SETTINGS */
+/* ACCESSIBILITY */
 
 @media (prefers-reduced-motion: reduce) {
   html {

@@ -168,10 +168,10 @@ const navLinks = [
 
 function BrandLogo({ light = false }: { light?: boolean }) {
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex min-w-0 items-center gap-2.5 md:gap-3">
       <svg
         viewBox="0 0 90 82"
-        className="h-[54px] w-[60px] shrink-0 md:h-[62px] md:w-[68px]"
+        className="h-[48px] w-[52px] shrink-0 sm:h-[54px] sm:w-[60px] md:h-[62px] md:w-[68px]"
         aria-hidden="true"
       >
         <defs>
@@ -182,7 +182,6 @@ function BrandLogo({ light = false }: { light?: boolean }) {
           </linearGradient>
         </defs>
 
-        {/* Crown */}
         <path
           d="M25 19 L31 7 L38 18 L45 3 L52 18 L59 7 L65 19"
           fill="none"
@@ -196,7 +195,6 @@ function BrandLogo({ light = false }: { light?: boolean }) {
         <circle cx="45" cy="2.5" r="2" fill="#C79C45" />
         <circle cx="59" cy="6" r="2" fill="#C79C45" />
 
-        {/* M */}
         <path
           d="M12 70 L23 26 L45 51 L67 26 L78 70 H64 L59 47 L45 65 L31 47 L26 70 Z"
           fill="url(#logoGold)"
@@ -209,9 +207,9 @@ function BrandLogo({ light = false }: { light?: boolean }) {
         />
       </svg>
 
-      <div>
+      <div className="min-w-0">
         <div
-          className={`font-display text-[18px] font-semibold tracking-[0.07em] md:text-[23px] ${
+          className={`font-display whitespace-nowrap text-[16px] font-semibold tracking-[0.05em] sm:text-[18px] md:text-[23px] ${
             light ? "text-white" : "text-[#241A0F]"
           }`}
         >
@@ -219,7 +217,7 @@ function BrandLogo({ light = false }: { light?: boolean }) {
         </div>
 
         <div
-          className={`mt-[-2px] text-[9px] font-semibold tracking-[0.55em] ${
+          className={`mt-[-2px] whitespace-nowrap text-[7px] font-semibold tracking-[0.45em] sm:text-[9px] sm:tracking-[0.55em] ${
             light ? "text-[#D6B36A]" : "text-[#79551A]"
           }`}
         >
@@ -238,7 +236,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <main className="overflow-x-hidden bg-[#F6F0E6] text-[#211A13]">
+    <main className="w-full overflow-x-hidden bg-[#F6F0E6] text-[#211A13]">
       {/* TOP BAR */}
       <div className="fixed left-0 top-0 z-[70] hidden h-9 w-full bg-[#2B2116] text-white lg:block">
         <div className="mx-auto flex h-full max-w-[1600px] items-center justify-between px-10">
@@ -259,10 +257,8 @@ export default function Home() {
           <div className="flex items-center gap-5 text-[10px] uppercase tracking-[0.12em] text-white/60">
             <span>Premium Cars</span>
             <span className="text-[#B88A3B]">•</span>
-
             <span>Personal Service</span>
             <span className="text-[#B88A3B]">•</span>
-
             <span>Benin & Nigeria</span>
 
             <a
@@ -297,9 +293,9 @@ export default function Home() {
       </div>
 
       {/* NAVBAR */}
-      <header className="fixed left-0 top-0 z-[60] w-full border-b border-[#5B421F]/10 bg-[#F7F1E7]/90 shadow-[0_8px_30px_rgba(83,58,23,0.06)] backdrop-blur-xl lg:top-9">
-        <nav className="mx-auto flex h-[82px] max-w-[1600px] items-center justify-between px-5 md:px-8 lg:px-10">
-          <a href="#home">
+      <header className="fixed left-0 top-0 z-[60] w-full border-b border-[#5B421F]/10 bg-[#F7F1E7]/95 shadow-[0_8px_30px_rgba(83,58,23,0.06)] backdrop-blur-xl lg:top-9">
+        <nav className="mx-auto flex h-[88px] w-full max-w-[1600px] items-center justify-between gap-3 px-4 sm:px-5 md:h-[82px] md:px-8 lg:px-10">
+          <a href="#home" className="min-w-0">
             <BrandLogo />
           </a>
 
@@ -339,13 +335,12 @@ export default function Home() {
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
             aria-label="Toggle navigation menu"
-            className="flex h-11 w-11 items-center justify-center border border-[#B88A3B]/30 text-xl lg:hidden"
+            className="flex h-11 w-11 shrink-0 items-center justify-center border border-[#B88A3B]/30 text-xl lg:hidden"
           >
             {menuOpen ? <FiX /> : <FiMenu />}
           </button>
         </nav>
 
-        {/* MOBILE MENU */}
         {menuOpen && (
           <div className="border-t border-[#B88A3B]/20 bg-[#F6F0E6] px-5 py-6 lg:hidden">
             <div className="flex flex-col gap-5">
@@ -360,10 +355,10 @@ export default function Home() {
                 </a>
               ))}
 
-              <div className="grid grid-cols-2 gap-3 pt-2">
+              <div className="grid grid-cols-1 gap-3 min-[390px]:grid-cols-2">
                 <a
                   href={callLink}
-                  className="flex items-center justify-center gap-2 border border-[#B88A3B] px-4 py-4 text-sm font-semibold text-[#76501B]"
+                  className="flex min-h-12 items-center justify-center gap-2 border border-[#B88A3B] px-4 font-semibold text-[#76501B]"
                 >
                   <FiPhone />
                   Call Us
@@ -373,19 +368,12 @@ export default function Home() {
                   href={whatsappLink}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center justify-center gap-2 bg-[#B88A3B] px-4 py-4 text-sm font-semibold text-white"
+                  className="flex min-h-12 items-center justify-center gap-2 bg-[#B88A3B] px-4 font-semibold text-white"
                 >
                   <FaWhatsapp />
                   WhatsApp
                 </a>
               </div>
-
-              <a
-                href={callLink}
-                className="text-center text-xs font-semibold text-[#7C694D]"
-              >
-                +234 903 144 7030
-              </a>
             </div>
           </div>
         )}
@@ -394,10 +382,10 @@ export default function Home() {
       {/* HERO */}
       <section
         id="home"
-        className="relative min-h-[820px] overflow-hidden bg-[#EEE5D8] pt-[120px] lg:pt-[155px]"
+        className="relative overflow-hidden bg-[#EEE5D8] pt-[112px] lg:min-h-[820px] lg:pt-[155px]"
       >
-        {/* BACKGROUND */}
-        <div className="absolute inset-0">
+        {/* DESKTOP SHOWROOM DECOR */}
+        <div className="pointer-events-none absolute inset-0 hidden lg:block">
           <div className="absolute right-[-5%] top-[8%] h-[440px] w-[62%] bg-gradient-to-br from-[#CDAE7D]/40 via-[#C6AD89]/20 to-[#765632]/15 blur-[2px]" />
 
           <div className="absolute right-[2%] top-[17%] h-[330px] w-[46%] border-l border-t border-[#8C6B40]/20 bg-[#8F704C]/10 backdrop-blur-[2px]" />
@@ -407,31 +395,49 @@ export default function Home() {
           <div className="absolute right-[13%] top-[23.8%] text-[13px] font-bold tracking-[0.16em] text-[#D6B36A]/70">
             MMADUABUCHI MOTORS
           </div>
-
-          <div className="absolute bottom-[150px] left-0 h-[3px] w-full rotate-[-2deg] bg-gradient-to-r from-transparent via-[#C99330]/50 to-transparent blur-sm" />
-
-          <div className="road-streak road-streak-one" />
-          <div className="road-streak road-streak-two" />
-
-          <div className="absolute bottom-0 left-0 right-0 h-[230px] bg-gradient-to-t from-[#D9D0C5] via-[#EBE4DA]/70 to-transparent" />
         </div>
 
+        {/* MOBILE BACKGROUND */}
+        <div className="pointer-events-none absolute inset-0 lg:hidden">
+          <div className="absolute -right-28 top-20 h-[360px] w-[360px] rounded-full bg-[#D0B37C]/20 blur-[80px]" />
+
+          <div className="absolute -left-24 top-[400px] h-[300px] w-[300px] rounded-full bg-white/60 blur-[90px]" />
+        </div>
+
+        <div className="pointer-events-none absolute bottom-[150px] left-0 hidden h-[3px] w-full rotate-[-2deg] bg-gradient-to-r from-transparent via-[#C99330]/50 to-transparent blur-sm lg:block" />
+
+        <div className="road-streak road-streak-one hidden lg:block" />
+        <div className="road-streak road-streak-two hidden lg:block" />
+
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-[180px] bg-gradient-to-t from-[#D9D0C5]/80 via-[#EBE4DA]/30 to-transparent lg:h-[230px]" />
+
         {/* HERO CONTENT */}
-        <div className="relative z-10 mx-auto grid min-h-[660px] max-w-[1600px] items-center px-5 pb-16 md:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-10">
+        <div className="relative z-10 mx-auto grid w-full max-w-[1600px] grid-cols-1 px-5 pb-14 sm:px-6 md:px-8 lg:min-h-[660px] lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-10 lg:pb-16">
+          {/* TEXT */}
           <motion.div
-            initial={{ opacity: 0, x: -35 }}
+            initial={{ opacity: 0, x: -25 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative z-20 pt-12 lg:pt-0"
+            className="relative z-20 min-w-0 pt-10 sm:pt-12 lg:pt-0"
           >
-            <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.48em] text-[#A6772B] md:text-xs">
-              Luxury &nbsp; | &nbsp; Performance &nbsp; | &nbsp; Reliability
-            </p>
+            {/* MOBILE-SAFE EYEBROW */}
+            <div className="mb-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-[9px] font-semibold uppercase tracking-[0.28em] text-[#A6772B] sm:text-[10px] sm:tracking-[0.38em] md:text-xs">
+              <span>Luxury</span>
+              <span className="text-[#B88A3B]/55">|</span>
+              <span>Performance</span>
+              <span className="text-[#B88A3B]/55">|</span>
+              <span>Reliability</span>
+            </div>
 
-            <h1 className="font-display text-[62px] font-semibold uppercase leading-[0.82] tracking-[-0.055em] text-[#211A13] sm:text-7xl md:text-[95px] lg:text-[106px]">
-              Drive
-              <br />
-              <span className="gold-text">Distinction</span>
+            {/* MOBILE-SAFE HEADLINE */}
+            <h1 className="font-display max-w-full font-semibold uppercase leading-[0.86] tracking-[-0.045em] text-[#211A13]">
+              <span className="block text-[56px] sm:text-[68px] md:text-[82px] lg:text-[106px]">
+                Drive
+              </span>
+
+              <span className="gold-text block text-[43px] min-[370px]:text-[47px] min-[410px]:text-[51px] sm:text-[62px] md:text-[76px] lg:text-[106px]">
+                Distinction
+              </span>
             </h1>
 
             <p className="mt-7 max-w-[470px] text-[15px] leading-7 text-[#594F43] md:text-base">
@@ -440,10 +446,11 @@ export default function Home() {
               more.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            {/* BUTTONS - STACKED ON MOBILE */}
+            <div className="mt-8 grid w-full max-w-[470px] grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:max-w-none lg:flex-wrap">
               <a
                 href="#inventory"
-                className="flex items-center gap-4 rounded-sm bg-gradient-to-r from-[#A8751F] to-[#D0A342] px-7 py-4 text-[13px] font-semibold text-white shadow-[0_15px_35px_rgba(159,111,31,0.23)] transition hover:-translate-y-1"
+                className="flex min-h-[58px] w-full items-center justify-center gap-4 rounded-sm bg-gradient-to-r from-[#A8751F] to-[#D0A342] px-6 text-[13px] font-semibold text-white shadow-[0_15px_35px_rgba(159,111,31,0.23)] transition hover:-translate-y-1 sm:col-span-2 lg:w-auto"
               >
                 Explore Our Cars
                 <FiArrowRight />
@@ -451,74 +458,87 @@ export default function Home() {
 
               <a
                 href="#showroom"
-                className="flex items-center gap-3 rounded-sm border border-[#A47A39]/50 bg-white/45 px-6 py-4 text-[13px] font-semibold text-[#211A13] backdrop-blur-md transition hover:bg-white"
+                className="flex min-h-[56px] w-full items-center justify-center gap-3 rounded-sm border border-[#A47A39]/50 bg-white/45 px-5 text-[13px] font-semibold text-[#211A13] backdrop-blur-md transition hover:bg-white lg:w-auto"
               >
-                <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#211A13]">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#211A13]">
                   <FiPlay className="ml-0.5 text-xs" />
                 </span>
+
                 Watch Showroom
               </a>
 
               <a
                 href={callLink}
-                className="flex items-center gap-3 rounded-sm border border-[#A47A39]/50 bg-white/45 px-6 py-4 text-[13px] font-semibold text-[#211A13] backdrop-blur-md transition hover:bg-white"
+                className="flex min-h-[56px] w-full items-center justify-center gap-3 rounded-sm border border-[#A47A39]/50 bg-white/45 px-5 text-[13px] font-semibold text-[#211A13] backdrop-blur-md transition hover:bg-white lg:w-auto"
               >
                 <FiPhone />
                 Call Us
               </a>
             </div>
 
-            {/* TRUST */}
-            <div className="mt-12 grid max-w-[570px] grid-cols-3 border-t border-[#B29361]/35 pt-7">
-              <div className="pr-4">
-                <PiCarProfileBold className="mb-2 text-2xl text-[#B38332]" />
+            {/* TRUST - STACKED MOBILE */}
+            <div className="mt-10 grid max-w-[570px] grid-cols-1 overflow-hidden border-y border-[#B29361]/35 sm:grid-cols-3 sm:border-y-0 sm:border-t sm:pt-7">
+              <div className="flex items-center gap-4 border-b border-[#B29361]/25 py-5 sm:block sm:border-b-0 sm:py-0 sm:pr-4">
+                <PiCarProfileBold className="shrink-0 text-2xl text-[#B38332] sm:mb-2" />
 
-                <div className="text-lg font-semibold">Premium</div>
+                <div>
+                  <div className="text-base font-semibold sm:text-lg">
+                    Premium
+                  </div>
 
-                <div className="text-[11px] text-[#776A59]">
-                  Vehicle Selection
+                  <div className="text-[11px] text-[#776A59]">
+                    Vehicle Selection
+                  </div>
                 </div>
               </div>
 
-              <div className="border-l border-[#B29361]/40 px-5">
-                <FiShield className="mb-2 text-2xl text-[#B38332]" />
+              <div className="flex items-center gap-4 border-b border-[#B29361]/25 py-5 sm:block sm:border-b-0 sm:border-l sm:border-[#B29361]/40 sm:px-5 sm:py-0">
+                <FiShield className="shrink-0 text-2xl text-[#B38332] sm:mb-2" />
 
-                <div className="text-lg font-semibold">Direct</div>
+                <div>
+                  <div className="text-base font-semibold sm:text-lg">
+                    Direct
+                  </div>
 
-                <div className="text-[11px] text-[#776A59]">
-                  Personal Enquiries
+                  <div className="text-[11px] text-[#776A59]">
+                    Personal Enquiries
+                  </div>
                 </div>
               </div>
 
-              <div className="border-l border-[#B29361]/40 pl-5">
-                <FiMapPin className="mb-2 text-2xl text-[#B38332]" />
+              <div className="flex items-center gap-4 py-5 sm:block sm:border-l sm:border-[#B29361]/40 sm:py-0 sm:pl-5">
+                <FiMapPin className="shrink-0 text-2xl text-[#B38332] sm:mb-2" />
 
-                <div className="text-lg font-semibold">3 Locations</div>
+                <div>
+                  <div className="text-base font-semibold sm:text-lg">
+                    3 Locations
+                  </div>
 
-                <div className="text-[11px] text-[#776A59]">
-                  Benin & Nigeria
+                  <div className="text-[11px] text-[#776A59]">
+                    Benin & Nigeria
+                  </div>
                 </div>
               </div>
             </div>
           </motion.div>
 
           {/* HERO CAR */}
-          <div className="relative mt-10 flex min-h-[430px] items-center justify-center lg:mt-0 lg:min-h-[620px]">
+          <div className="relative mt-5 flex min-h-[330px] w-full min-w-0 items-center justify-center sm:min-h-[400px] md:min-h-[470px] lg:mt-0 lg:min-h-[620px]">
             <motion.div
-              animate={{ y: [0, -10, 0] }}
+              animate={{ y: [0, -8, 0] }}
               transition={{
                 duration: 5,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="relative z-10 w-full"
+              className="relative z-10 w-full min-w-0"
             >
-              <div className="absolute bottom-[4%] left-[12%] right-[5%] h-[55px] rounded-[50%] bg-black/30 blur-2xl" />
+              <div className="absolute bottom-[5%] left-[10%] right-[10%] h-[38px] rounded-[50%] bg-black/25 blur-2xl md:h-[55px]" />
 
               <img
                 src={images.lexus}
                 alt="Lexus RX luxury SUV"
-                className="hero-car relative z-10 mx-auto w-full max-w-[850px]"
+                className="hero-car relative z-10 mx-auto block h-auto w-full max-w-[520px] object-contain sm:max-w-[620px] lg:max-w-[850px]"
               />
             </motion.div>
 
@@ -545,7 +565,7 @@ export default function Home() {
 
         <a
           href="#brands"
-          className="absolute bottom-7 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-1 text-[#6C5A40]"
+          className="relative z-30 mx-auto mb-8 flex w-fit flex-col items-center gap-1 text-[#6C5A40] lg:absolute lg:bottom-7 lg:left-1/2 lg:mb-0 lg:-translate-x-1/2"
         >
           <span className="text-[9px] uppercase tracking-[0.25em]">
             Discover
@@ -578,7 +598,7 @@ export default function Home() {
             {[...brands, ...brands].map((brand, index) => (
               <div
                 key={`${brand}-${index}`}
-                className="flex min-w-[190px] items-center justify-center px-8 py-7 md:min-w-[230px]"
+                className="flex min-w-[150px] items-center justify-center px-6 py-6 sm:min-w-[190px] md:min-w-[230px] md:px-8 md:py-7"
               >
                 <span
                   className={`brand-name ${
@@ -593,7 +613,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FEATURED COLLECTIONS */}
+      {/* FEATURE COLLECTIONS */}
       <section className="grid lg:grid-cols-3">
         {collections.map((collection, index) => (
           <motion.article
@@ -605,7 +625,7 @@ export default function Home() {
               duration: 0.7,
               delay: index * 0.12,
             }}
-            className="collection-card group relative min-h-[520px] overflow-hidden"
+            className="collection-card group relative min-h-[470px] overflow-hidden sm:min-h-[520px]"
           >
             <img
               src={collection.image}
@@ -617,13 +637,13 @@ export default function Home() {
 
             <div className="absolute inset-0 bg-gradient-to-t from-[#17110B]/90 via-transparent to-[#17110B]/10" />
 
-            <div className="relative z-10 flex h-full min-h-[520px] flex-col justify-between p-8 text-white md:p-10">
+            <div className="relative z-10 flex min-h-[470px] flex-col justify-between p-6 text-white sm:min-h-[520px] sm:p-8 md:p-10">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.32em] text-[#E1BF79]">
                   {collection.eyebrow}
                 </p>
 
-                <h2 className="font-display mt-4 max-w-[310px] text-4xl uppercase leading-[0.98]">
+                <h2 className="font-display mt-4 max-w-[310px] text-3xl uppercase leading-[0.98] sm:text-4xl">
                   {collection.title}
                 </h2>
               </div>
@@ -649,15 +669,15 @@ export default function Home() {
       </section>
 
       {/* INVENTORY */}
-      <section id="inventory" className="bg-[#F4EEE5] py-24 lg:py-32">
+      <section id="inventory" className="bg-[#F4EEE5] py-20 lg:py-32">
         <div className="mx-auto max-w-[1500px] px-5 md:px-8 lg:px-10">
-          <div className="mb-14 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+          <div className="mb-12 flex flex-col justify-between gap-6 lg:mb-14 lg:flex-row lg:items-end">
             <div>
               <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.4em] text-[#A6772B]">
                 Explore the collection
               </p>
 
-              <h2 className="font-display text-5xl leading-none tracking-[-0.04em] md:text-7xl">
+              <h2 className="font-display text-4xl leading-none tracking-[-0.04em] sm:text-5xl md:text-7xl">
                 Popular Models
               </h2>
             </div>
@@ -695,18 +715,20 @@ export default function Home() {
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
 
-                    <span className="absolute left-5 top-5 border border-white/35 bg-black/20 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-md">
+                    <span className="absolute left-4 top-4 border border-white/35 bg-black/20 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-md sm:left-5 sm:top-5">
                       {vehicle.type}
                     </span>
                   </div>
 
-                  <div className="p-6">
+                  <div className="p-5 sm:p-6">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#A6772B]">
                       {vehicle.brand}
                     </p>
 
                     <div className="mt-2 flex items-end justify-between gap-4">
-                      <h3 className="font-display text-3xl">{vehicle.model}</h3>
+                      <h3 className="font-display text-2xl sm:text-3xl">
+                        {vehicle.model}
+                      </h3>
 
                       <a
                         href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
@@ -731,19 +753,18 @@ export default function Home() {
       {/* VIDEO SHOWROOM */}
       <section
         id="showroom"
-        className="overflow-hidden bg-[#1B140E] py-24 text-white lg:py-32"
+        className="overflow-hidden bg-[#1B140E] py-20 text-white lg:py-32"
       >
         <div className="mx-auto max-w-[1500px] px-5 md:px-8 lg:px-10">
-          <div className="grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
+          <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-end lg:gap-12">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#D6B36A]">
                 Video showroom
               </p>
 
-              <h2 className="font-display mt-5 text-5xl leading-[0.94] md:text-7xl">
+              <h2 className="font-display mt-5 text-4xl leading-[0.94] sm:text-5xl md:text-7xl">
                 See The Cars
                 <br />
-
                 <span className="text-[#D6B36A]">In Motion.</span>
               </h2>
 
@@ -772,7 +793,7 @@ export default function Home() {
                   />
                 </video>
 
-                <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6 pt-24">
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-5 pt-24 sm:p-6">
                   <p className="text-[10px] uppercase tracking-[0.25em] text-[#D6B36A]">
                     Performance
                   </p>
@@ -801,7 +822,7 @@ export default function Home() {
                   />
                 </video>
 
-                <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6 pt-24">
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-5 pt-24 sm:p-6">
                   <p className="text-[10px] uppercase tracking-[0.25em] text-[#D6B36A]">
                     Iconic Luxury
                   </p>
@@ -817,14 +838,14 @@ export default function Home() {
       </section>
 
       {/* ABOUT */}
-      <section id="about" className="bg-[#F8F4ED] py-24 lg:py-32">
-        <div className="mx-auto grid max-w-[1500px] gap-14 px-5 md:px-8 lg:grid-cols-2 lg:px-10">
+      <section id="about" className="bg-[#F8F4ED] py-20 lg:py-32">
+        <div className="mx-auto grid max-w-[1500px] gap-10 px-5 md:px-8 lg:grid-cols-2 lg:gap-14 lg:px-10">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#A6772B]">
               MMADUABUCHI MOTORS
             </p>
 
-            <h2 className="font-display mt-5 max-w-2xl text-5xl leading-[0.98] md:text-7xl">
+            <h2 className="font-display mt-5 max-w-2xl text-4xl leading-[0.98] sm:text-5xl md:text-7xl">
               Luxury Meets
               <br />
               Opportunity.
@@ -832,7 +853,7 @@ export default function Home() {
           </div>
 
           <div className="max-w-xl lg:pt-10">
-            <p className="text-lg leading-8 text-[#564B3D]">
+            <p className="text-base leading-8 text-[#564B3D] sm:text-lg">
               MMADUABUCHI MOTORS connects clients with carefully selected
               automobiles across Benin Republic and Nigeria.
             </p>
@@ -843,7 +864,7 @@ export default function Home() {
               automobiles, clients can enquire directly and arrange inspections.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-6">
+            <div className="mt-8 flex flex-col items-start gap-5 sm:flex-row sm:flex-wrap">
               <a
                 href={whatsappLink}
                 target="_blank"
@@ -869,15 +890,15 @@ export default function Home() {
       {/* LOCATIONS */}
       <section
         id="locations"
-        className="bg-[#C59B50] py-24 text-[#21180E] lg:py-28"
+        className="bg-[#C59B50] py-20 text-[#21180E] lg:py-28"
       >
         <div className="mx-auto max-w-[1500px] px-5 md:px-8 lg:px-10">
-          <div className="mb-14">
+          <div className="mb-12 lg:mb-14">
             <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#5B4015]">
               Our offices
             </p>
 
-            <h2 className="font-display mt-4 text-5xl md:text-7xl">
+            <h2 className="font-display mt-4 text-4xl sm:text-5xl md:text-7xl">
               Three Locations.
               <span className="block text-[#664717]">One Standard.</span>
             </h2>
@@ -887,16 +908,16 @@ export default function Home() {
             {locations.map((location) => (
               <article
                 key={location.city}
-                className="group min-h-[300px] border-b border-r border-[#74521C]/30 p-7 transition hover:bg-[#D5B36D] md:p-9"
+                className="group min-h-[250px] border-b border-r border-[#74521C]/30 p-6 transition hover:bg-[#D5B36D] sm:p-7 md:min-h-[300px] md:p-9"
               >
                 <FiMapPin className="text-2xl" />
 
-                <div className="mt-20">
+                <div className="mt-12 md:mt-20">
                   <p className="text-[10px] uppercase tracking-[0.25em] text-[#74531F]">
                     {location.label}
                   </p>
 
-                  <h3 className="font-display mt-2 text-4xl">
+                  <h3 className="font-display mt-2 text-3xl md:text-4xl">
                     {location.city}
                   </h3>
 
@@ -911,9 +932,9 @@ export default function Home() {
       </section>
 
       {/* CONTACT CTA */}
-      <section className="bg-[#F5EFE6] px-5 py-20 md:px-8 lg:px-10 lg:py-28">
-        <div className="relative mx-auto max-w-[1500px] overflow-hidden bg-[#211810] px-6 py-20 text-center text-white md:py-28">
-          <div className="absolute left-1/2 top-1/2 h-[480px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#B88932]/15 blur-[130px]" />
+      <section className="bg-[#F5EFE6] px-5 py-16 md:px-8 lg:px-10 lg:py-28">
+        <div className="relative mx-auto max-w-[1500px] overflow-hidden bg-[#211810] px-5 py-16 text-center text-white sm:px-6 sm:py-20 md:py-28">
+          <div className="absolute left-1/2 top-1/2 h-[400px] w-[550px] max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#B88932]/15 blur-[130px] md:h-[480px] md:w-[700px]" />
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -925,7 +946,7 @@ export default function Home() {
               Your next vehicle
             </p>
 
-            <h2 className="font-display mx-auto mt-5 max-w-4xl text-5xl leading-[0.95] md:text-7xl">
+            <h2 className="font-display mx-auto mt-5 max-w-4xl text-4xl leading-[0.95] sm:text-5xl md:text-7xl">
               Ready To Find
               <br />
               The Right Car?
@@ -936,20 +957,20 @@ export default function Home() {
               specifications, vehicle inspection and availability.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <div className="mx-auto mt-8 grid max-w-md grid-cols-1 gap-3 sm:grid-cols-2">
               <a
                 href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-3 rounded-sm bg-[#25D366] px-7 py-4 text-xs font-bold uppercase tracking-[0.12em] text-black transition hover:-translate-y-1"
+                className="inline-flex min-h-[56px] items-center justify-center gap-3 rounded-sm bg-[#25D366] px-6 text-xs font-bold uppercase tracking-[0.12em] text-black transition hover:-translate-y-1"
               >
                 <FaWhatsapp className="text-lg" />
-                Chat on WhatsApp
+                WhatsApp
               </a>
 
               <a
                 href={callLink}
-                className="inline-flex items-center gap-3 rounded-sm border border-[#D6B36A]/40 bg-white/5 px-7 py-4 text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:-translate-y-1 hover:bg-[#D6B36A] hover:text-[#211810]"
+                className="inline-flex min-h-[56px] items-center justify-center gap-3 rounded-sm border border-[#D6B36A]/40 bg-white/5 px-6 text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:-translate-y-1 hover:bg-[#D6B36A] hover:text-[#211810]"
               >
                 <FiPhone />
                 Call Us
@@ -958,7 +979,7 @@ export default function Home() {
 
             <a
               href={callLink}
-              className="mt-5 inline-block text-xs tracking-[0.15em] text-[#D8C19A] transition hover:text-white"
+              className="mt-5 inline-block text-xs tracking-[0.12em] text-[#D8C19A] transition hover:text-white"
             >
               +234 903 144 7030
             </a>
@@ -967,10 +988,10 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-[#17110C] px-5 pb-8 pt-16 text-white md:px-8 lg:px-10">
+      <footer className="bg-[#17110C] px-5 pb-8 pt-14 text-white md:px-8 lg:px-10 lg:pt-16">
         <div className="mx-auto max-w-[1500px]">
-          <div className="grid gap-12 border-b border-[#D6B36A]/15 pb-14 md:grid-cols-2 lg:grid-cols-4">
-            <div className="lg:col-span-2">
+          <div className="grid gap-10 border-b border-[#D6B36A]/15 pb-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12 lg:pb-14">
+            <div className="sm:col-span-2">
               <BrandLogo light />
 
               <p className="mt-6 max-w-sm text-sm leading-7 text-[#998873]">
@@ -1041,11 +1062,8 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-4 pt-7 text-[10px] uppercase tracking-[0.16em] text-[#786956] sm:flex-row sm:items-center sm:justify-between">
-            <p>
-              © {new Date().getFullYear()} MMADUABUCHI MOTORS
-            </p>
-
+          <div className="flex flex-col gap-3 pt-7 text-[9px] uppercase tracking-[0.14em] text-[#786956] sm:flex-row sm:items-center sm:justify-between sm:text-[10px]">
+            <p>© {new Date().getFullYear()} MMADUABUCHI MOTORS</p>
             <p>Cotonou · Lagos · Onitsha</p>
           </div>
         </div>
@@ -1063,7 +1081,7 @@ export default function Home() {
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="fixed bottom-5 right-5 z-[80] flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-xl text-black shadow-[0_15px_40px_rgba(37,211,102,0.35)]"
+        className="fixed bottom-5 right-4 z-[80] flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-xl text-black shadow-[0_15px_40px_rgba(37,211,102,0.35)] sm:right-5"
       >
         <FaWhatsapp />
       </motion.a>
