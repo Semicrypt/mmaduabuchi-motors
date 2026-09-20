@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import {
@@ -14,6 +14,7 @@ import {
   FiX,
 } from "react-icons/fi";
 import { PiCarProfileBold } from "react-icons/pi";
+import { supabase } from "@/lib/supabase";
 
 /* -------------------------------------------------------------------------- */
 /*                                  CONTACT                                   */
@@ -94,44 +95,43 @@ const collections = [
   },
 ];
 
-const vehicles = [
-  {
-    brand: "Lexus",
-    model: "RX 350",
-    type: "Luxury SUV",
-    image: images.lexus,
-  },
-  {
-    brand: "Mercedes-AMG",
-    model: "GLE 53 Coupe",
-    type: "Performance SUV",
-    image: images.mercedes,
-  },
-  {
-    brand: "Toyota",
-    model: "Land Cruiser",
-    type: "Premium SUV",
-    image: images.landCruiser,
-  },
-  {
-    brand: "Range Rover",
-    model: "Range Rover Sport",
-    type: "Luxury SUV",
-    image: images.rangeRover,
-  },
-  {
-    brand: "Mercedes-AMG",
-    model: "G-Class",
-    type: "Luxury Performance",
-    image: images.gWagon,
-  },
-  {
-    brand: "Toyota",
-    model: "Hilux GR",
-    type: "Premium Pickup",
-    image: images.hilux,
-  },
-];
+type PublicVehicle = {
+  id: string;
+  name: string;
+  brand: string;
+  model: string;
+  year: number | null;
+  price: number | null;
+  currency: string | null;
+  mileage: number | null;
+  transmission: string | null;
+  fuel_type: string | null;
+  color: string | null;
+  condition: string | null;
+  location: string | null;
+  description: string | null;
+  status: "available" | "reserved" | "sold" | "hidden";
+  featured: boolean;
+  cover_image_url: string | null;
+  video_url: string | null;
+  created_at: string;
+};
+
+function formatPrice(price: number | null, currency?: string | null) {
+  if (price === null) {
+    return "Price on request";
+  }
+
+  try {
+    return new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: currency || "NGN",
+      maximumFractionDigits: 0,
+    }).format(Number(price));
+  } catch {
+    return `${currency || "NGN"} ${Number(price).toLocaleString()}`;
+  }
+}
 
 const locations = [
   {
@@ -155,7 +155,7 @@ const locations = [
 
 const navLinks = [
   ["Home", "#home"],
-  ["Inventory", "#inventory"],
+  ["Inventory", "/inventory"],
   ["Brands", "#brands"],
   ["About", "#about"],
   ["Locations", "#locations"],
@@ -234,6 +234,37 @@ function BrandLogo({ light = false }: { light?: boolean }) {
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [vehicles, setVehicles] = useState<PublicVehicle[]>([]);
+  const [vehiclesLoading, setVehiclesLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadVehicles() {
+      const { data, error } = await supabase
+        .from("vehicles")
+        .select("*")
+        .neq("status", "hidden")
+        .order("featured", { ascending: false })
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Failed to load vehicles:", error);
+      } else if (mounted) {
+        setVehicles((data || []) as PublicVehicle[]);
+      }
+
+      if (mounted) {
+        setVehiclesLoading(false);
+      }
+    }
+
+    loadVehicles();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <main className="w-full overflow-x-hidden bg-[#F6F0E6] text-[#211A13]">
@@ -449,7 +480,7 @@ export default function Home() {
             {/* BUTTONS - STACKED ON MOBILE */}
             <div className="mt-8 grid w-full max-w-[470px] grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:max-w-none lg:flex-wrap">
               <a
-                href="#inventory"
+                href="/inventory"
                 className="flex min-h-[58px] w-full items-center justify-center gap-4 rounded-sm bg-gradient-to-r from-[#A8751F] to-[#D0A342] px-6 text-[13px] font-semibold text-white shadow-[0_15px_35px_rgba(159,111,31,0.23)] transition hover:-translate-y-1 sm:col-span-2 lg:w-auto"
               >
                 Explore Our Cars
@@ -656,7 +687,7 @@ export default function Home() {
                 </p>
 
                 <a
-                  href="#inventory"
+                  href="/inventory"
                   className="mt-6 inline-flex items-center gap-4 bg-[#B88932] px-5 py-3 text-xs font-semibold transition hover:bg-[#D6B36A]"
                 >
                   {collection.button}
@@ -690,62 +721,229 @@ export default function Home() {
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {vehicles.map((vehicle, index) => {
-              const carMessage = `Hello MMADUABUCHI MOTORS, I'm interested in the ${vehicle.brand} ${vehicle.model}. Please tell me more about availability.`;
-
-              return (
-                <motion.article
-                  key={vehicle.model}
-                  initial={{ opacity: 0, y: 35 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: 0.55,
-                    delay: index * 0.06,
-                  }}
-                  whileHover={{ y: -6 }}
-                  className="vehicle-card group overflow-hidden bg-[#FAF8F3]"
+            {vehiclesLoading &&
+              Array.from({ length: 3 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="vehicle-card overflow-hidden bg-[#FAF8F3]"
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden bg-[#E8E0D5]">
-                    <img
-                      src={vehicle.image}
-                      alt={`${vehicle.brand} ${vehicle.model}`}
-                      className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.06]"
-                    />
+                  <div className="aspect-[4/3] animate-pulse bg-[#DDD3C5]" />
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-
-                    <span className="absolute left-4 top-4 border border-white/35 bg-black/20 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-md sm:left-5 sm:top-5">
-                      {vehicle.type}
-                    </span>
+                  <div className="space-y-3 p-6">
+                    <div className="h-3 w-24 animate-pulse bg-[#DDD3C5]" />
+                    <div className="h-8 w-2/3 animate-pulse bg-[#DDD3C5]" />
                   </div>
+                </div>
+              ))}
 
-                  <div className="p-5 sm:p-6">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#A6772B]">
-                      {vehicle.brand}
-                    </p>
+            {!vehiclesLoading && vehicles.length === 0 && (
+              <div className="col-span-full border border-[#B88932]/20 bg-[#FAF8F3] px-6 py-16 text-center">
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#A6772B]">
+                  Inventory
+                </p>
 
-                    <div className="mt-2 flex items-end justify-between gap-4">
-                      <h3 className="font-display text-2xl sm:text-3xl">
-                        {vehicle.model}
-                      </h3>
+                <h3 className="font-display mt-3 text-3xl">
+                  New vehicles coming soon.
+                </h3>
 
-                      <a
-                        href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-                          carMessage
-                        )}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label={`Ask about ${vehicle.model}`}
-                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#20180F] text-white transition group-hover:bg-[#B88932]"
-                      >
-                        <FiArrowRight />
-                      </a>
+                <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-[#796B59]">
+                  Contact MMADUABUCHI MOTORS for currently available vehicles.
+                </p>
+
+                <a
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-6 inline-flex items-center gap-2 bg-[#B88932] px-6 py-3 text-sm font-semibold text-white"
+                >
+                  <FaWhatsapp />
+                  Ask on WhatsApp
+                </a>
+              </div>
+            )}
+
+            {!vehiclesLoading &&
+              vehicles.map((vehicle, index) => {
+                const message = `Hello MMADUABUCHI MOTORS, I'm interested in the ${
+                  vehicle.year ? `${vehicle.year} ` : ""
+                }${vehicle.brand} ${
+                  vehicle.model
+                }. Please tell me more about availability.`;
+
+                return (
+                  <motion.article
+                    key={vehicle.id}
+                    initial={{ opacity: 0, y: 35 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.55,
+                      delay: index * 0.06,
+                    }}
+                    whileHover={{ y: -6 }}
+                    className="vehicle-card group overflow-hidden bg-[#FAF8F3]"
+                  >
+                    <a
+                      href={`/cars/${vehicle.id}`}
+                      className="relative block aspect-[4/3] overflow-hidden bg-[#E8E0D5]"
+                      aria-label={`View ${vehicle.brand} ${vehicle.model}`}
+                    >
+                      {vehicle.cover_image_url ? (
+                        <img
+                          src={vehicle.cover_image_url}
+                          alt={`${vehicle.brand} ${vehicle.model}`}
+                          className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.06]"
+                        />
+                      ) : (
+                        <div className="flex h-full items-center justify-center">
+                          <PiCarProfileBold className="text-7xl text-[#B88932]/30" />
+                        </div>
+                      )}
+
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+
+                      <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+                        {vehicle.condition && (
+                          <span className="border border-white/30 bg-black/25 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.15em] text-white backdrop-blur">
+                            {vehicle.condition}
+                          </span>
+                        )}
+
+                        {vehicle.featured && (
+                          <span className="bg-[#B88932] px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.15em] text-white">
+                            Featured
+                          </span>
+                        )}
+                      </div>
+
+                      {vehicle.status !== "available" && (
+                        <span
+                          className={`absolute right-4 top-4 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.15em] text-white ${
+                            vehicle.status === "sold"
+                              ? "bg-red-700"
+                              : "bg-[#9B6C22]"
+                          }`}
+                        >
+                          {vehicle.status}
+                        </span>
+                      )}
+
+                      {vehicle.location && (
+                        <div className="absolute bottom-4 left-4 flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-white">
+                          <FiMapPin />
+                          {vehicle.location}
+                        </div>
+                      )}
+                    </a>
+
+                    <div className="p-6">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#A6772B]">
+                        {vehicle.brand}
+                      </p>
+
+                      <div className="mt-2 flex items-start justify-between gap-4">
+                        <a
+                          href={`/cars/${vehicle.id}`}
+                          className="block transition hover:text-[#8A611F]"
+                        >
+                          <h3 className="font-display text-2xl sm:text-3xl">
+                            {vehicle.year ? `${vehicle.year} ` : ""}
+                            {vehicle.model}
+                          </h3>
+                        </a>
+
+                        <a
+                          href={`/cars/${vehicle.id}`}
+                          aria-label={`View ${vehicle.brand} ${vehicle.model}`}
+                          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#20180F] text-white transition hover:bg-[#B88932]"
+                        >
+                          <FiArrowRight />
+                        </a>
+                      </div>
+
+                      <p className="mt-4 text-lg font-semibold text-[#6D4B17]">
+                        {formatPrice(vehicle.price, vehicle.currency)}
+                      </p>
+
+                      <div className="mt-5 grid grid-cols-2 gap-4 border-t border-[#B69A70]/20 pt-5">
+                        {vehicle.mileage !== null && (
+                          <div>
+                            <p className="text-[9px] uppercase tracking-[0.15em] text-[#9A8A74]">
+                              Mileage
+                            </p>
+
+                            <p className="mt-1 text-xs font-semibold">
+                              {Number(vehicle.mileage).toLocaleString()} km
+                            </p>
+                          </div>
+                        )}
+
+                        {vehicle.transmission && (
+                          <div>
+                            <p className="text-[9px] uppercase tracking-[0.15em] text-[#9A8A74]">
+                              Transmission
+                            </p>
+
+                            <p className="mt-1 text-xs font-semibold">
+                              {vehicle.transmission}
+                            </p>
+                          </div>
+                        )}
+
+                        {vehicle.fuel_type && (
+                          <div>
+                            <p className="text-[9px] uppercase tracking-[0.15em] text-[#9A8A74]">
+                              Fuel
+                            </p>
+
+                            <p className="mt-1 text-xs font-semibold">
+                              {vehicle.fuel_type}
+                            </p>
+                          </div>
+                        )}
+
+                        {vehicle.color && (
+                          <div>
+                            <p className="text-[9px] uppercase tracking-[0.15em] text-[#9A8A74]">
+                              Colour
+                            </p>
+
+                            <p className="mt-1 text-xs font-semibold">
+                              {vehicle.color}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="mt-6 flex gap-3">
+                        <a
+                          href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+                            message
+                          )}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={`flex flex-1 items-center justify-center gap-2 px-4 py-3 text-xs font-bold uppercase tracking-[0.1em] ${
+                            vehicle.status === "sold"
+                              ? "pointer-events-none bg-[#D8D0C5] text-[#8E8375]"
+                              : "bg-[#B88932] text-white transition hover:bg-[#9D7229]"
+                          }`}
+                        >
+                          <FaWhatsapp />
+                          {vehicle.status === "sold" ? "Sold" : "Enquire"}
+                        </a>
+
+                        <a
+                          href={callLink}
+                          className="flex h-11 w-11 items-center justify-center border border-[#B88932]/35 text-[#80591D] transition hover:bg-[#211810] hover:text-white"
+                          aria-label="Call MMADUABUCHI MOTORS"
+                        >
+                          <FiPhone />
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                </motion.article>
-              );
-            })}
+                  </motion.article>
+                );
+              })}
           </div>
         </div>
       </section>
