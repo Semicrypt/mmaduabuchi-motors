@@ -266,6 +266,15 @@ export default function Home() {
     };
   }, []);
 
+  const featuredVehicles = vehicles.filter(
+    (vehicle) => vehicle.featured
+  );
+
+  const homepageVehicles =
+    featuredVehicles.length > 0
+      ? featuredVehicles.slice(0, 6)
+      : vehicles.slice(0, 6);
+
   return (
     <main className="w-full overflow-x-hidden bg-[#F6F0E6] text-[#211A13]">
       {/* TOP BAR */}
@@ -713,11 +722,20 @@ export default function Home() {
               </h2>
             </div>
 
-            <p className="max-w-md text-sm leading-7 text-[#796B59]">
-              Browse some of the vehicle categories and models MMADUABUCHI
-              MOTORS can showcase. Actual inventory and availability will be
-              updated with current stock.
-            </p>
+            <div className="flex max-w-md flex-col items-start gap-5 lg:items-end">
+              <p className="text-sm leading-7 text-[#796B59] lg:text-right">
+                Discover selected vehicles currently featured by MMADUABUCHI
+                MOTORS. Browse the full inventory for every listed vehicle.
+              </p>
+
+              <a
+                href="/inventory"
+                className="inline-flex min-h-[48px] items-center gap-3 border border-[#A8751F]/35 bg-white/40 px-5 text-xs font-bold uppercase tracking-[0.12em] text-[#76501B] transition hover:bg-[#211810] hover:text-white"
+              >
+                View All Inventory
+                <FiArrowRight />
+              </a>
+            </div>
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -736,7 +754,7 @@ export default function Home() {
                 </div>
               ))}
 
-            {!vehiclesLoading && vehicles.length === 0 && (
+            {!vehiclesLoading && homepageVehicles.length === 0 && (
               <div className="col-span-full border border-[#B88932]/20 bg-[#FAF8F3] px-6 py-16 text-center">
                 <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#A6772B]">
                   Inventory
@@ -763,7 +781,7 @@ export default function Home() {
             )}
 
             {!vehiclesLoading &&
-              vehicles.map((vehicle, index) => {
+              homepageVehicles.map((vehicle, index) => {
                 const message = `Hello MMADUABUCHI MOTORS, I'm interested in the ${
                   vehicle.year ? `${vehicle.year} ` : ""
                 }${vehicle.brand} ${
@@ -945,6 +963,19 @@ export default function Home() {
                 );
               })}
           </div>
+
+          {!vehiclesLoading &&
+            vehicles.length > homepageVehicles.length && (
+              <div className="mt-10 text-center">
+                <a
+                  href="/inventory"
+                  className="inline-flex min-h-[52px] items-center justify-center gap-3 bg-[#211810] px-7 text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:bg-[#B88932]"
+                >
+                  Browse Full Inventory
+                  <FiArrowRight />
+                </a>
+              </div>
+            )}
         </div>
       </section>
 
