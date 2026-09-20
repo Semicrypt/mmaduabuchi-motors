@@ -12,7 +12,9 @@ import {
   FiChevronRight,
   FiEdit3,
   FiEye,
+  FiGrid,
   FiImage,
+  FiList,
   FiLogOut,
   FiPlus,
   FiRefreshCw,
@@ -163,6 +165,7 @@ export default function AdminDashboardPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | VehicleStatus>("all");
+  const [viewMode, setViewMode] = useState<"cards" | "list">("cards");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -824,6 +827,36 @@ export default function AdminDashboardPage() {
               <FiChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2" />
             </label>
 
+            <div className="flex min-h-12 overflow-hidden border border-[#B89A68]/30 bg-white">
+              <button
+                type="button"
+                onClick={() => setViewMode("cards")}
+                className={`flex min-w-12 items-center justify-center px-3 transition ${
+                  viewMode === "cards"
+                    ? "bg-[#211810] text-white"
+                    : "text-[#6F5B3E] hover:bg-[#F6F0E6]"
+                }`}
+                aria-label="Card view"
+                title="Card view"
+              >
+                <FiGrid />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setViewMode("list")}
+                className={`flex min-w-12 items-center justify-center border-l border-[#B89A68]/30 px-3 transition ${
+                  viewMode === "list"
+                    ? "bg-[#211810] text-white"
+                    : "text-[#6F5B3E] hover:bg-[#F6F0E6]"
+                }`}
+                aria-label="List view"
+                title="List view"
+              >
+                <FiList />
+              </button>
+            </div>
+
             <button
               type="button"
               onClick={() => loadVehicles().catch((err) => setError(err.message))}
@@ -842,7 +875,7 @@ export default function AdminDashboardPage() {
               Add the first vehicle or change the current search/filter.
             </p>
           </section>
-        ) : (
+        ) : viewMode === "cards" ? (
           <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {visibleVehicles.map((vehicle) => (
               <motion.article
@@ -865,7 +898,11 @@ export default function AdminDashboardPage() {
                   )}
 
                   <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-                    <span className={`border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] ${statusClasses(vehicle.status)}`}>
+                    <span
+                      className={`border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] ${statusClasses(
+                        vehicle.status
+                      )}`}
+                    >
                       {vehicle.status}
                     </span>
 
@@ -875,6 +912,16 @@ export default function AdminDashboardPage() {
                       </span>
                     )}
                   </div>
+
+                  <a
+                    href={`/cars/${vehicle.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="absolute bottom-3 right-3 flex h-10 items-center gap-2 bg-black/60 px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-white backdrop-blur transition hover:bg-[#B88932]"
+                  >
+                    <FiEye />
+                    Public page
+                  </a>
                 </div>
 
                 <div className="p-5">
@@ -883,9 +930,15 @@ export default function AdminDashboardPage() {
                       <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#A6772B]">
                         {vehicle.brand}
                       </p>
-                      <h3 className="mt-1 truncate font-serif text-2xl">{vehicle.name}</h3>
+
+                      <h3 className="mt-1 truncate font-serif text-2xl">
+                        {vehicle.name}
+                      </h3>
+
                       <p className="mt-1 text-sm text-[#7B6C58]">
-                        {[vehicle.year, vehicle.condition, vehicle.location].filter(Boolean).join(" · ")}
+                        {[vehicle.year, vehicle.condition, vehicle.location]
+                          .filter(Boolean)
+                          .join(" · ")}
                       </p>
                     </div>
 
@@ -894,28 +947,53 @@ export default function AdminDashboardPage() {
                     </p>
                   </div>
 
-                  <div className="mt-5 grid grid-cols-2 gap-2">
+                  <div className="mt-5">
+                    <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.16em] text-[#8C795E]">
+                      Quick status
+                    </p>
+
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                      {(
+                        [
+                          ["available", "Available"],
+                          ["reserved", "Reserved"],
+                          ["sold", "Sold"],
+                          ["hidden", "Hidden"],
+                        ] as [VehicleStatus, string][]
+                      ).map(([value, label]) => (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => setStatus(vehicle, value)}
+                          className={`min-h-9 border px-2 text-[9px] font-bold uppercase tracking-[0.08em] transition ${
+                            vehicle.status === value
+                              ? statusClasses(value)
+                              : "border-[#A98C5A]/25 bg-white text-[#78664D] hover:border-[#B88932]"
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-2 gap-2">
                     <button
                       type="button"
                       onClick={() => openEditVehicle(vehicle)}
-                      className="flex min-h-11 items-center justify-center gap-2 border border-[#A98C5A]/30 bg-white text-xs font-semibold"
+                      className="flex min-h-11 items-center justify-center gap-2 border border-[#A98C5A]/30 bg-white text-xs font-semibold transition hover:border-[#B88932]"
                     >
-                      <FiEdit3 /> Edit
+                      <FiEdit3 /> Edit Vehicle
                     </button>
 
-                    <label className="relative">
-                      <select
-                        value={vehicle.status}
-                        onChange={(event) => setStatus(vehicle, event.target.value as VehicleStatus)}
-                        className="min-h-11 w-full appearance-none border border-[#A98C5A]/30 bg-white px-3 pr-8 text-xs font-semibold outline-none"
-                      >
-                        <option value="available">Available</option>
-                        <option value="reserved">Reserved</option>
-                        <option value="sold">Sold</option>
-                        <option value="hidden">Hidden</option>
-                      </select>
-                      <FiChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs" />
-                    </label>
+                    <a
+                      href={`/cars/${vehicle.id}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex min-h-11 items-center justify-center gap-2 border border-[#A98C5A]/30 bg-white text-xs font-semibold transition hover:border-[#B88932]"
+                    >
+                      <FiEye /> View
+                    </a>
                   </div>
 
                   <button
@@ -929,7 +1007,139 @@ export default function AdminDashboardPage() {
               </motion.article>
             ))}
           </section>
+        ) : (
+          <section className="overflow-hidden border border-[#9D7C45]/15 bg-[#FBF8F2]">
+            <div className="hidden grid-cols-[76px_1.4fr_.8fr_.75fr_.75fr_1.25fr] gap-4 border-b border-[#9D7C45]/15 bg-[#F0E8DC] px-4 py-3 text-[9px] font-bold uppercase tracking-[0.14em] text-[#78664D] lg:grid">
+              <span>Photo</span>
+              <span>Vehicle</span>
+              <span>Price</span>
+              <span>Location</span>
+              <span>Status</span>
+              <span className="text-right">Actions</span>
+            </div>
+
+            <div className="divide-y divide-[#9D7C45]/15">
+              {visibleVehicles.map((vehicle) => (
+                <article
+                  key={vehicle.id}
+                  className="grid gap-4 p-4 transition hover:bg-[#FFFDF9] lg:grid-cols-[76px_1.4fr_.8fr_.75fr_.75fr_1.25fr] lg:items-center"
+                >
+                  <div className="h-[68px] w-[76px] overflow-hidden bg-[#DED6CA]">
+                    {vehicle.cover_image_url ? (
+                      <img
+                        src={vehicle.cover_image_url}
+                        alt={vehicle.name}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-[#A59071]">
+                        <FiImage />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="truncate font-serif text-lg font-semibold">
+                        {vehicle.name}
+                      </p>
+
+                      {vehicle.featured && (
+                        <span className="flex items-center gap-1 border border-[#D0A64F] bg-[#FFF5D8] px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-[#8B621E]">
+                          <FiStar />
+                          Featured
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="mt-1 text-xs text-[#7B6C58]">
+                      {[vehicle.brand, vehicle.year, vehicle.condition]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-[#8C795E] lg:hidden">
+                      Price
+                    </p>
+                    <p className="mt-1 text-sm font-bold text-[#4B3820] lg:mt-0">
+                      {money(vehicle.price, vehicle.currency)}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-[#8C795E] lg:hidden">
+                      Location
+                    </p>
+                    <p className="mt-1 text-sm text-[#5F513E] lg:mt-0">
+                      {vehicle.location || "—"}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="relative block">
+                      <span className="mb-1 block text-[9px] font-bold uppercase tracking-[0.12em] text-[#8C795E] lg:hidden">
+                        Status
+                      </span>
+
+                      <select
+                        value={vehicle.status}
+                        onChange={(event) =>
+                          setStatus(
+                            vehicle,
+                            event.target.value as VehicleStatus
+                          )
+                        }
+                        className={`min-h-10 w-full appearance-none border px-3 pr-8 text-xs font-bold capitalize outline-none ${statusClasses(
+                          vehicle.status
+                        )}`}
+                      >
+                        <option value="available">Available</option>
+                        <option value="reserved">Reserved</option>
+                        <option value="sold">Sold</option>
+                        <option value="hidden">Hidden</option>
+                      </select>
+
+                      <FiChevronDown className="pointer-events-none absolute bottom-3 right-3 text-xs" />
+                    </label>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 lg:flex lg:justify-end">
+                    <button
+                      type="button"
+                      onClick={() => openEditVehicle(vehicle)}
+                      className="flex min-h-10 items-center justify-center gap-1 border border-[#A98C5A]/30 bg-white px-3 text-[10px] font-semibold transition hover:border-[#B88932]"
+                    >
+                      <FiEdit3 />
+                      <span className="hidden xl:inline">Edit</span>
+                    </button>
+
+                    <a
+                      href={`/cars/${vehicle.id}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex min-h-10 items-center justify-center gap-1 border border-[#A98C5A]/30 bg-white px-3 text-[10px] font-semibold transition hover:border-[#B88932]"
+                    >
+                      <FiEye />
+                      <span className="hidden xl:inline">View</span>
+                    </a>
+
+                    <button
+                      type="button"
+                      onClick={() => deleteVehicle(vehicle)}
+                      className="flex min-h-10 items-center justify-center gap-1 border border-red-200 bg-white px-3 text-[10px] font-semibold text-red-600 transition hover:bg-red-50"
+                    >
+                      <FiTrash2 />
+                      <span className="hidden xl:inline">Delete</span>
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
         )}
+
       </div>
 
       {editorOpen && (
