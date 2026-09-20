@@ -934,7 +934,7 @@ export default function AdminDashboardPage() {
 
       {editorOpen && (
         <div className="fixed inset-0 z-[100] overflow-y-auto bg-black/55 p-0 backdrop-blur-sm sm:p-5">
-          <div className="ml-auto min-h-screen w-full max-w-4xl bg-[#F7F2EA] shadow-2xl sm:min-h-0">
+          <div className="ml-auto min-h-screen w-full max-w-5xl bg-[#F7F2EA] shadow-2xl sm:min-h-0">
             <div className="sticky top-0 z-20 flex items-center justify-between border-b border-[#9D7C45]/15 bg-[#1B140E] px-5 py-4 text-white sm:px-7">
               <div>
                 <p className="text-[9px] font-semibold uppercase tracking-[0.3em] text-[#D6B36A]">
@@ -971,191 +971,329 @@ export default function AdminDashboardPage() {
                 </div>
               )}
 
-              <section>
-                <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.26em] text-[#A6772B]">
-                  Vehicle details
-                </p>
+              <div className="grid gap-6">
+                {/* BASIC DETAILS */}
+                <section className="border border-[#B79864]/20 bg-[#FBF8F2] p-5 sm:p-6">
+                  <div className="mb-5 flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[#A6772B]">
+                        01 · Basic details
+                      </p>
+                      <h3 className="mt-2 font-serif text-2xl text-[#2A2118]">
+                        Identify the vehicle
+                      </h3>
+                      <p className="mt-1 text-xs leading-5 text-[#80715D]">
+                        The name, brand and model customers will see throughout the website.
+                      </p>
+                    </div>
 
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Field label="Listing name" required>
-                    <input
-                      value={form.name}
-                      onChange={(event) => updateForm("name", event.target.value)}
-                      required
-                      placeholder="2024 Lexus RX 350"
-                      className="admin-input"
-                    />
-                  </Field>
+                    <div className="hidden h-10 w-10 shrink-0 items-center justify-center border border-[#B79864]/25 bg-white text-[#A6772B] sm:flex">
+                      <FiEdit3 />
+                    </div>
+                  </div>
 
-                  <Field label="Brand" required>
-                    <input
-                      list="brand-options"
-                      value={form.brand}
-                      onChange={(event) => updateForm("brand", event.target.value)}
-                      required
-                      placeholder="Lexus"
-                      className="admin-input"
-                    />
-                    <datalist id="brand-options">
-                      {BRANDS.map((brand) => (
-                        <option key={brand} value={brand} />
-                      ))}
-                    </datalist>
-                  </Field>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Field label="Listing name" required className="md:col-span-2">
+                      <input
+                        value={form.name}
+                        onChange={(event) => updateForm("name", event.target.value)}
+                        required
+                        placeholder="2024 Lexus RX 350"
+                        className="admin-input"
+                      />
+                    </Field>
 
-                  <Field label="Model" required>
-                    <input
-                      value={form.model}
-                      onChange={(event) => updateForm("model", event.target.value)}
-                      required
-                      placeholder="RX 350"
-                      className="admin-input"
-                    />
-                  </Field>
+                    <Field label="Brand" required>
+                      <input
+                        list="brand-options"
+                        value={form.brand}
+                        onChange={(event) => updateForm("brand", event.target.value)}
+                        required
+                        placeholder="Lexus"
+                        className="admin-input"
+                      />
+                      <datalist id="brand-options">
+                        {BRANDS.map((brand) => (
+                          <option key={brand} value={brand} />
+                        ))}
+                      </datalist>
+                    </Field>
 
-                  <Field label="Year">
-                    <input
-                      type="number"
-                      min="1980"
-                      max="2100"
-                      value={form.year}
-                      onChange={(event) => updateForm("year", event.target.value)}
-                      placeholder="2024"
-                      className="admin-input"
-                    />
-                  </Field>
+                    <Field label="Model" required>
+                      <input
+                        value={form.model}
+                        onChange={(event) => updateForm("model", event.target.value)}
+                        required
+                        placeholder="RX 350"
+                        className="admin-input"
+                      />
+                    </Field>
 
-                  <Field label="Price">
-                    <div className="grid grid-cols-[95px_1fr]">
+                    <Field label="Year">
+                      <input
+                        type="number"
+                        min="1980"
+                        max="2100"
+                        value={form.year}
+                        onChange={(event) => updateForm("year", event.target.value)}
+                        placeholder="2024"
+                        className="admin-input"
+                      />
+                    </Field>
+
+                    <Field label="Colour">
+                      <input
+                        value={form.color}
+                        onChange={(event) => updateForm("color", event.target.value)}
+                        placeholder="Black"
+                        className="admin-input"
+                      />
+                    </Field>
+                  </div>
+                </section>
+
+                {/* PRICING & LOCATION */}
+                <section className="border border-[#B79864]/20 bg-[#FBF8F2] p-5 sm:p-6">
+                  <div className="mb-5">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[#A6772B]">
+                      02 · Pricing & location
+                    </p>
+                    <h3 className="mt-2 font-serif text-2xl text-[#2A2118]">
+                      Sale information
+                    </h3>
+                    <p className="mt-1 text-xs leading-5 text-[#80715D]">
+                      Set the advertised price and the branch where the vehicle is located.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Field label="Price">
+                      <div className="grid grid-cols-[95px_1fr]">
+                        <select
+                          value={form.currency}
+                          onChange={(event) => updateForm("currency", event.target.value)}
+                          className="admin-input border-r-0"
+                        >
+                          <option value="NGN">NGN</option>
+                          <option value="XOF">XOF</option>
+                          <option value="USD">USD</option>
+                        </select>
+
+                        <input
+                          type="number"
+                          min="0"
+                          value={form.price}
+                          onChange={(event) => updateForm("price", event.target.value)}
+                          placeholder="85000000"
+                          className="admin-input"
+                        />
+                      </div>
+
+                      {form.price && (
+                        <span className="mt-2 block text-xs font-semibold text-[#8A6323]">
+                          Preview: {money(Number(form.price), form.currency)}
+                        </span>
+                      )}
+                    </Field>
+
+                    <Field label="Location">
                       <select
-                        value={form.currency}
-                        onChange={(event) => updateForm("currency", event.target.value)}
-                        className="admin-input border-r-0"
+                        value={form.location}
+                        onChange={(event) => updateForm("location", event.target.value)}
+                        className="admin-input"
                       >
-                        <option value="NGN">NGN</option>
-                        <option value="XOF">XOF</option>
-                        <option value="USD">USD</option>
+                        {LOCATIONS.map((location) => (
+                          <option key={location}>{location}</option>
+                        ))}
                       </select>
+                    </Field>
+                  </div>
+                </section>
+
+                {/* SPECIFICATIONS */}
+                <section className="border border-[#B79864]/20 bg-[#FBF8F2] p-5 sm:p-6">
+                  <div className="mb-5">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[#A6772B]">
+                      03 · Specifications
+                    </p>
+                    <h3 className="mt-2 font-serif text-2xl text-[#2A2118]">
+                      Vehicle specifications
+                    </h3>
+                    <p className="mt-1 text-xs leading-5 text-[#80715D]">
+                      These details appear on the inventory card and full vehicle page.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Field label="Mileage (km)">
                       <input
                         type="number"
                         min="0"
-                        value={form.price}
-                        onChange={(event) => updateForm("price", event.target.value)}
-                        placeholder="85000000"
+                        value={form.mileage}
+                        onChange={(event) => updateForm("mileage", event.target.value)}
+                        placeholder="12500"
                         className="admin-input"
                       />
+                    </Field>
+
+                    <Field label="Condition">
+                      <select
+                        value={form.condition}
+                        onChange={(event) => updateForm("condition", event.target.value)}
+                        className="admin-input"
+                      >
+                        {CONDITIONS.map((condition) => (
+                          <option key={condition}>{condition}</option>
+                        ))}
+                      </select>
+                    </Field>
+
+                    <Field label="Transmission">
+                      <select
+                        value={form.transmission}
+                        onChange={(event) => updateForm("transmission", event.target.value)}
+                        className="admin-input"
+                      >
+                        {TRANSMISSIONS.map((transmission) => (
+                          <option key={transmission}>{transmission}</option>
+                        ))}
+                      </select>
+                    </Field>
+
+                    <Field label="Fuel type">
+                      <select
+                        value={form.fuel_type}
+                        onChange={(event) => updateForm("fuel_type", event.target.value)}
+                        className="admin-input"
+                      >
+                        {FUELS.map((fuel) => (
+                          <option key={fuel}>{fuel}</option>
+                        ))}
+                      </select>
+                    </Field>
+                  </div>
+                </section>
+
+                {/* DESCRIPTION */}
+                <section className="border border-[#B79864]/20 bg-[#FBF8F2] p-5 sm:p-6">
+                  <div className="mb-5">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[#A6772B]">
+                      04 · Description
+                    </p>
+                    <h3 className="mt-2 font-serif text-2xl text-[#2A2118]">
+                      Customer-facing description
+                    </h3>
+                    <p className="mt-1 text-xs leading-5 text-[#80715D]">
+                      Add notable features, condition notes and inspection information.
+                    </p>
+                  </div>
+
+                  <Field label="Description">
+                    <textarea
+                      value={form.description}
+                      onChange={(event) => updateForm("description", event.target.value)}
+                      rows={6}
+                      placeholder="Vehicle details, notable features, inspection information…"
+                      className="admin-input resize-y py-3"
+                    />
+                  </Field>
+                </section>
+
+                {/* PUBLISHING */}
+                <section className="border border-[#B79864]/20 bg-[#FBF8F2] p-5 sm:p-6">
+                  <div className="mb-5">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[#A6772B]">
+                      05 · Publishing
+                    </p>
+                    <h3 className="mt-2 font-serif text-2xl text-[#2A2118]">
+                      Availability & visibility
+                    </h3>
+                    <p className="mt-1 text-xs leading-5 text-[#80715D]">
+                      Control whether customers can see the car and whether it is promoted on the homepage.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Field label="Status">
+                      <select
+                        value={form.status}
+                        onChange={(event) =>
+                          updateForm("status", event.target.value as VehicleStatus)
+                        }
+                        className="admin-input"
+                      >
+                        <option value="available">Available</option>
+                        <option value="reserved">Reserved</option>
+                        <option value="sold">Sold</option>
+                        <option value="hidden">Hidden</option>
+                      </select>
+                    </Field>
+
+                    <div className="border border-[#B79864]/30 bg-white p-4">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#73634F]">
+                        Homepage promotion
+                      </p>
+
+                      <label className="mt-3 flex cursor-pointer items-start gap-3">
+                        <input
+                          type="checkbox"
+                          checked={form.featured}
+                          onChange={(event) =>
+                            updateForm("featured", event.target.checked)
+                          }
+                          className="mt-0.5 h-4 w-4 accent-[#B88932]"
+                        />
+
+                        <span>
+                          <span className="flex items-center gap-2 text-sm font-semibold text-[#2A2118]">
+                            <FiStar className="text-[#A6772B]" />
+                            Feature this vehicle
+                          </span>
+
+                          <span className="mt-1 block text-xs leading-5 text-[#80715D]">
+                            Featured vehicles are prioritized in the homepage showcase.
+                          </span>
+                        </span>
+                      </label>
                     </div>
-                  </Field>
+                  </div>
 
-                  <Field label="Mileage (km)">
-                    <input
-                      type="number"
-                      min="0"
-                      value={form.mileage}
-                      onChange={(event) => updateForm("mileage", event.target.value)}
-                      placeholder="12500"
-                      className="admin-input"
-                    />
-                  </Field>
-
-                  <Field label="Condition">
-                    <select
-                      value={form.condition}
-                      onChange={(event) => updateForm("condition", event.target.value)}
-                      className="admin-input"
-                    >
-                      {CONDITIONS.map((condition) => (
-                        <option key={condition}>{condition}</option>
-                      ))}
-                    </select>
-                  </Field>
-
-                  <Field label="Location">
-                    <select
-                      value={form.location}
-                      onChange={(event) => updateForm("location", event.target.value)}
-                      className="admin-input"
-                    >
-                      {LOCATIONS.map((location) => (
-                        <option key={location}>{location}</option>
-                      ))}
-                    </select>
-                  </Field>
-
-                  <Field label="Transmission">
-                    <select
-                      value={form.transmission}
-                      onChange={(event) => updateForm("transmission", event.target.value)}
-                      className="admin-input"
-                    >
-                      {TRANSMISSIONS.map((transmission) => (
-                        <option key={transmission}>{transmission}</option>
-                      ))}
-                    </select>
-                  </Field>
-
-                  <Field label="Fuel type">
-                    <select
-                      value={form.fuel_type}
-                      onChange={(event) => updateForm("fuel_type", event.target.value)}
-                      className="admin-input"
-                    >
-                      {FUELS.map((fuel) => (
-                        <option key={fuel}>{fuel}</option>
-                      ))}
-                    </select>
-                  </Field>
-
-                  <Field label="Colour">
-                    <input
-                      value={form.color}
-                      onChange={(event) => updateForm("color", event.target.value)}
-                      placeholder="Black"
-                      className="admin-input"
-                    />
-                  </Field>
-
-                  <Field label="Status">
-                    <select
-                      value={form.status}
-                      onChange={(event) => updateForm("status", event.target.value as VehicleStatus)}
-                      className="admin-input"
-                    >
-                      <option value="available">Available</option>
-                      <option value="reserved">Reserved</option>
-                      <option value="sold">Sold</option>
-                      <option value="hidden">Hidden</option>
-                    </select>
-                  </Field>
-                </div>
-
-                <Field label="Description" className="mt-4">
-                  <textarea
-                    value={form.description}
-                    onChange={(event) => updateForm("description", event.target.value)}
-                    rows={5}
-                    placeholder="Vehicle details, notable features, inspection information…"
-                    className="admin-input resize-y py-3"
-                  />
-                </Field>
-
-                <label className="mt-4 flex min-h-12 cursor-pointer items-center gap-3 border border-[#B79864]/30 bg-white px-4">
-                  <input
-                    type="checkbox"
-                    checked={form.featured}
-                    onChange={(event) => updateForm("featured", event.target.checked)}
-                    className="h-4 w-4 accent-[#B88932]"
-                  />
-                  <FiStar className="text-[#A6772B]" />
-                  <span className="text-sm font-semibold">Feature this vehicle on the homepage</span>
-                </label>
-              </section>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-4">
+                    {[
+                      ["available", "Available", "Visible and open for enquiries."],
+                      ["reserved", "Reserved", "Visible but marked reserved."],
+                      ["sold", "Sold", "Visible with a sold badge."],
+                      ["hidden", "Hidden", "Removed from the public website."],
+                    ].map(([value, title, note]) => (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() =>
+                          updateForm("status", value as VehicleStatus)
+                        }
+                        className={`border p-3 text-left transition ${
+                          form.status === value
+                            ? "border-[#B88932] bg-[#FFF7E7]"
+                            : "border-[#B79864]/20 bg-white hover:border-[#B88932]/50"
+                        }`}
+                      >
+                        <span className="block text-xs font-bold text-[#2A2118]">
+                          {title}
+                        </span>
+                        <span className="mt-1 block text-[10px] leading-4 text-[#80715D]">
+                          {note}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              </div>
 
               <section className="border-t border-[#9D7C45]/15 pt-7">
                 <div className="mb-4 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[#A6772B]">
-                      Photos
+                      06 · Photos
                     </p>
                     <p className="mt-1 text-xs text-[#80715D]">Up to 15 JPG, PNG or WebP files · 10 MB each.</p>
                   </div>
@@ -1265,7 +1403,7 @@ export default function AdminDashboardPage() {
 
               <section className="border-t border-[#9D7C45]/15 pt-7">
                 <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[#A6772B]">
-                  Walkaround video
+                  07 · Walkaround video
                 </p>
                 <p className="mt-1 text-xs text-[#80715D]">
                   Optional MP4/MOV · maximum 50 MB during the Supabase preview stage.
