@@ -8,6 +8,8 @@ import {
   FiArrowLeft,
   FiCheck,
   FiChevronDown,
+  FiChevronLeft,
+  FiChevronRight,
   FiEdit3,
   FiEye,
   FiImage,
@@ -513,6 +515,81 @@ export default function AdminDashboardPage() {
       await loadVehicles();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to change status.");
+    }
+  }
+
+  async function moveImage(
+    vehicle: Vehicle,
+    media: VehicleMedia,
+    direction: "left" | "right"
+  ) {
+    try {
+      setError("");
+
+      const images = (vehicle.vehicle_media || [])
+        .filter((item) => item.media_type === "image")
+        .sort((a, b) => a.sort_order - b.sort_order);
+
+      const currentIndex = images.findIndex((item) => item.id === media.id);
+      const targetIndex = direction === "left" ? currentIndex - 1 : currentIndex + 1;
+
+      if (
+        currentIndex === -1 ||
+        targetIndex < 0 ||
+        targetIndex >= images.length
+      ) {
+        return;
+      }
+
+      const current = images[currentIndex];
+      const target = images[targetIndex];
+
+      const { error: currentError } = await supabase
+        .from("vehicle_media")
+        .update({ sort_order: target.sort_order })
+        .eq("id", current.id);
+
+      if (currentError) throw currentError;
+
+      const { error: targetError } = await supabase
+        .from("vehicle_media")
+        .update({ sort_order: current.sort_order })
+        .eq("id", target.id);
+
+      if (targetError) throw targetError;
+
+      const reorderedMedia = (vehicle.vehicle_media || []).map((item) => {
+        if (item.id === current.id) {
+          return { ...item, sort_order: target.sort_order };
+        }
+
+        if (item.id === target.id) {
+          return { ...item, sort_order: current.sort_order };
+        }
+
+        return item;
+      });
+
+      const nextVehicle = {
+        ...vehicle,
+        vehicle_media: reorderedMedia,
+      };
+
+      setEditingVehicle(nextVehicle);
+
+      setVehicles((currentVehicles) =>
+        currentVehicles.map((item) =>
+          item.id === vehicle.id ? nextVehicle : item
+        )
+      );
+
+      await loadVehicles();
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to reorder vehicle photos."
+      );
     }
   }
 
@@ -1084,13 +1161,64 @@ export default function AdminDashboardPage() {
                   </div>
                 </div>
 
-                {editingVehicle?.vehicle_media?.some((media) => media.media_type === "image") && (
+                {editingVehicle?.vehicle_media?.some(
+                  (media) => media.media_type === "image"
+                ) && (
                   <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                     {editingVehicle.vehicle_media
                       .filter((media) => media.media_type === "image")
-                      .map((media) => (
-                        <div key={media.id} className="relative overflow-hidden border border-[#B79864]/20 bg-white">
-                          <img src={media.url} alt="Vehicle" className="aspect-[4/3] w-full object-cover" />
+                      .sort((a, b) => a.sort_order - b.sort_order)
+                      .map((media, index, images) => (
+                        <div
+                          key={media.id}
+                          className="relative overflow-hidden border border-[#B79864]/20 bg-white"
+                        >
+                          <div className="relative">
+                            <img
+                              src={media.url}
+                              alt={`Vehicle photo ${index + 1}`}
+                              className="aspect-[4/3] w-full object-cover"
+                            />
+
+                            <span className="absolute left-2 top-2 bg-black/65 px-2 py-1 text-[9px] font-bold text-white backdrop-blur-sm">
+                              {index + 1}
+                            </span>
+
+                            {editingVehicle.cover_image_url === media.url && (
+                              <span className="absolute right-2 top-2 bg-[#D6B36A] px-2 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-[#211A13]">
+                                Cover
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-2 border-t border-[#B79864]/20">
+                            <button
+                              type="button"
+                              disabled={index === 0}
+                              onClick={() =>
+                                moveImage(editingVehicle, media, "left")
+                              }
+                              className="flex min-h-9 items-center justify-center gap-1 text-[10px] font-semibold text-[#76551F] disabled:cursor-not-allowed disabled:opacity-30"
+                              aria-label={`Move photo ${index + 1} left`}
+                            >
+                              <FiChevronLeft />
+                              Left
+                            </button>
+
+                            <button
+                              type="button"
+                              disabled={index === images.length - 1}
+                              onClick={() =>
+                                moveImage(editingVehicle, media, "right")
+                              }
+                              className="flex min-h-9 items-center justify-center gap-1 border-l border-[#B79864]/20 text-[10px] font-semibold text-[#76551F] disabled:cursor-not-allowed disabled:opacity-30"
+                              aria-label={`Move photo ${index + 1} right`}
+                            >
+                              Right
+                              <FiChevronRight />
+                            </button>
+                          </div>
+
                           <div className="grid grid-cols-2 border-t border-[#B79864]/20">
                             <button
                               type="button"
@@ -1101,8 +1229,11 @@ export default function AdminDashboardPage() {
                                   : "bg-white text-[#76551F]"
                               }`}
                             >
-                              {editingVehicle.cover_image_url === media.url ? "Cover" : "Set cover"}
+                              {editingVehicle.cover_image_url === media.url
+                                ? "Cover photo"
+                                : "Set cover"}
                             </button>
+
                             <button
                               type="button"
                               onClick={() => removeMedia(editingVehicle, media)}
