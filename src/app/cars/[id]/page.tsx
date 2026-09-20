@@ -7,8 +7,12 @@ import { FaWhatsapp } from "react-icons/fa";
 import {
   FiArrowLeft,
   FiCheck,
+  FiChevronLeft,
+  FiChevronRight,
   FiMapPin,
+  FiMaximize2,
   FiPhone,
+  FiX,
 } from "react-icons/fi";
 import { PiCarProfileBold } from "react-icons/pi";
 import { supabase } from "@/lib/supabase";
@@ -127,6 +131,8 @@ export default function CarDetailPage() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [loadError, setLoadError] = useState("");
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   useEffect(() => {
     if (!vehicleId) return;
@@ -202,6 +208,75 @@ export default function CarDetailPage() {
     vehicle?.video_url ||
     media.find((item) => item.media_type === "video")?.url ||
     "";
+
+  const activeImageIndex = Math.max(
+    0,
+    imageUrls.findIndex((url) => url === activeImage)
+  );
+
+  function showImage(index: number) {
+    if (imageUrls.length === 0) return;
+
+    const normalizedIndex =
+      (index + imageUrls.length) % imageUrls.length;
+
+    setActiveImage(imageUrls[normalizedIndex]);
+  }
+
+  function showPreviousImage() {
+    showImage(activeImageIndex - 1);
+  }
+
+  function showNextImage() {
+    showImage(activeImageIndex + 1);
+  }
+
+  function handleTouchStart(clientX: number) {
+    setTouchStartX(clientX);
+  }
+
+  function handleTouchEnd(clientX: number) {
+    if (touchStartX === null || imageUrls.length < 2) {
+      setTouchStartX(null);
+      return;
+    }
+
+    const distance = clientX - touchStartX;
+
+    if (Math.abs(distance) >= 45) {
+      if (distance > 0) {
+        showPreviousImage();
+      } else {
+        showNextImage();
+      }
+    }
+
+    setTouchStartX(null);
+  }
+
+  useEffect(() => {
+    if (!galleryOpen) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setGalleryOpen(false);
+      }
+
+      if (event.key === "ArrowLeft") {
+        showPreviousImage();
+      }
+
+      if (event.key === "ArrowRight") {
+        showNextImage();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [galleryOpen, activeImage, imageUrls]);
 
   if (loading) {
     return (
@@ -309,22 +384,78 @@ export default function CarDetailPage() {
 
         <div className="mt-8 grid gap-10 lg:grid-cols-[1.12fr_.88fr] lg:items-start">
           <div className="min-w-0">
-            <div className="relative overflow-hidden border border-[#B88A3B]/15 bg-[#E5DCCE]">
+            <div
+              className="group relative overflow-hidden border border-[#B88A3B]/15 bg-[#E5DCCE]"
+              onTouchStart={(event) =>
+                handleTouchStart(event.changedTouches[0].clientX)
+              }
+              onTouchEnd={(event) =>
+                handleTouchEnd(event.changedTouches[0].clientX)
+              }
+            >
               {activeImage ? (
-                <img
-                  src={activeImage}
-                  alt={title}
-                  className="aspect-[4/3] w-full object-cover"
-                />
+                <button
+                  type="button"
+                  onClick={() => setGalleryOpen(true)}
+                  className="block w-full cursor-zoom-in"
+                  aria-label={`Open ${title} photo gallery`}
+                >
+                  <img
+                    src={activeImage}
+                    alt={`${title} photo ${activeImageIndex + 1}`}
+                    className="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-[1.015]"
+                  />
+                </button>
               ) : (
                 <div className="flex aspect-[4/3] items-center justify-center">
                   <PiCarProfileBold className="text-8xl text-[#B88932]/30" />
                 </div>
               )}
 
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/5" />
+
+              {imageUrls.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={showPreviousImage}
+                    className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/45 text-xl text-white backdrop-blur-md transition hover:bg-[#B88932] sm:left-5"
+                    aria-label="Previous vehicle photo"
+                  >
+                    <FiChevronLeft />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={showNextImage}
+                    className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/45 text-xl text-white backdrop-blur-md transition hover:bg-[#B88932] sm:right-5"
+                    aria-label="Next vehicle photo"
+                  >
+                    <FiChevronRight />
+                  </button>
+                </>
+              )}
+
+              {activeImage && (
+                <button
+                  type="button"
+                  onClick={() => setGalleryOpen(true)}
+                  className="absolute bottom-4 right-4 z-10 flex h-10 items-center gap-2 border border-white/30 bg-black/45 px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-white backdrop-blur-md transition hover:bg-[#B88932]"
+                >
+                  <FiMaximize2 />
+                  View gallery
+                </button>
+              )}
+
+              {imageUrls.length > 0 && (
+                <span className="absolute bottom-4 left-4 z-10 bg-black/45 px-3 py-2 text-[10px] font-bold tracking-[0.12em] text-white backdrop-blur-md">
+                  {activeImageIndex + 1} / {imageUrls.length}
+                </span>
+              )}
+
               {vehicle.status !== "available" && (
                 <span
-                  className={`absolute right-5 top-5 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-white ${
+                  className={`absolute right-4 top-4 z-10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-white ${
                     vehicle.status === "sold" ? "bg-red-700" : "bg-[#9B6C22]"
                   }`}
                 >
@@ -334,16 +465,16 @@ export default function CarDetailPage() {
             </div>
 
             {imageUrls.length > 1 && (
-              <div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-5 md:grid-cols-6">
+              <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
                 {imageUrls.map((url, index) => (
                   <button
                     type="button"
                     key={url}
-                    onClick={() => setActiveImage(url)}
-                    className={`aspect-square overflow-hidden border-2 ${
+                    onClick={() => showImage(index)}
+                    className={`relative aspect-[4/3] w-[92px] shrink-0 overflow-hidden border-2 transition sm:w-[108px] ${
                       activeImage === url
-                        ? "border-[#B88932]"
-                        : "border-transparent opacity-70 hover:opacity-100"
+                        ? "border-[#B88932] opacity-100"
+                        : "border-transparent opacity-60 hover:opacity-100"
                     }`}
                     aria-label={`View image ${index + 1}`}
                   >
@@ -352,9 +483,19 @@ export default function CarDetailPage() {
                       alt={`${title} thumbnail ${index + 1}`}
                       className="h-full w-full object-cover"
                     />
+
+                    <span className="absolute bottom-1 right-1 bg-black/60 px-1.5 py-0.5 text-[8px] font-bold text-white">
+                      {index + 1}
+                    </span>
                   </button>
                 ))}
               </div>
+            )}
+
+            {imageUrls.length > 1 && (
+              <p className="mt-2 text-[10px] leading-5 text-[#8C7B65] sm:hidden">
+                Swipe the main photo left or right to browse.
+              </p>
             )}
 
             {videoUrl && (
@@ -475,6 +616,101 @@ export default function CarDetailPage() {
           </div>
         </div>
       </section>
+
+      {galleryOpen && activeImage && (
+        <div
+          className="fixed inset-0 z-[120] flex items-center justify-center bg-black/95 p-3 sm:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${title} image gallery`}
+          onTouchStart={(event) =>
+            handleTouchStart(event.changedTouches[0].clientX)
+          }
+          onTouchEnd={(event) =>
+            handleTouchEnd(event.changedTouches[0].clientX)
+          }
+        >
+          <button
+            type="button"
+            onClick={() => setGalleryOpen(false)}
+            className="absolute right-4 top-4 z-20 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-2xl text-white backdrop-blur-md transition hover:bg-white hover:text-black sm:right-7 sm:top-7"
+            aria-label="Close gallery"
+          >
+            <FiX />
+          </button>
+
+          {imageUrls.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={showPreviousImage}
+                className="absolute left-3 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-2xl text-white backdrop-blur-md transition hover:bg-[#B88932] sm:left-7 sm:h-14 sm:w-14"
+                aria-label="Previous image"
+              >
+                <FiChevronLeft />
+              </button>
+
+              <button
+                type="button"
+                onClick={showNextImage}
+                className="absolute right-3 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-2xl text-white backdrop-blur-md transition hover:bg-[#B88932] sm:right-7 sm:h-14 sm:w-14"
+                aria-label="Next image"
+              >
+                <FiChevronRight />
+              </button>
+            </>
+          )}
+
+          <div className="flex h-full w-full max-w-[1500px] flex-col items-center justify-center">
+            <img
+              src={activeImage}
+              alt={`${title} enlarged photo ${activeImageIndex + 1}`}
+              className="max-h-[78vh] max-w-full object-contain"
+            />
+
+            <div className="mt-4 flex w-full max-w-4xl items-center justify-between gap-4 text-white">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#D6B36A]">
+                  {vehicle.brand}
+                </p>
+                <p className="mt-1 text-sm font-semibold">{title}</p>
+              </div>
+
+              <span className="shrink-0 text-xs font-semibold text-white/70">
+                {activeImageIndex + 1} / {imageUrls.length}
+              </span>
+            </div>
+
+            {imageUrls.length > 1 && (
+              <div className="mt-4 flex max-w-full gap-2 overflow-x-auto pb-2">
+                {imageUrls.map((url, index) => (
+                  <button
+                    type="button"
+                    key={url}
+                    onClick={() => showImage(index)}
+                    className={`aspect-[4/3] w-[72px] shrink-0 overflow-hidden border-2 transition sm:w-[88px] ${
+                      activeImage === url
+                        ? "border-[#D6B36A] opacity-100"
+                        : "border-transparent opacity-50 hover:opacity-100"
+                    }`}
+                    aria-label={`Open gallery image ${index + 1}`}
+                  >
+                    <img
+                      src={url}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <p className="mt-2 text-[10px] text-white/45 sm:hidden">
+              Swipe left or right to browse photos.
+            </p>
+          </div>
+        </div>
+      )}
 
       <section className="bg-[#211810] px-5 py-16 text-center text-white md:px-8">
         <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#D6B36A]">
