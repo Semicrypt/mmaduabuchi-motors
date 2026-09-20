@@ -221,6 +221,16 @@ export default function CarDetailPage() {
     );
   }
 
+  if (loadError) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#F5EFE6] px-5 text-center">
+        <div className="max-w-lg border border-red-200 bg-red-50 p-8 text-red-700">
+          {loadError}
+        </div>
+      </main>
+    );
+  }
+
   if (notFound || !vehicle) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#F5EFE6] px-5 text-center text-[#211A13]">
@@ -237,16 +247,6 @@ export default function CarDetailPage() {
             <FiArrowLeft />
             Back to inventory
           </Link>
-        </div>
-      </main>
-    );
-  }
-
-  if (loadError) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-[#F5EFE6] px-5 text-center">
-        <div className="max-w-lg border border-red-200 bg-red-50 p-8 text-red-700">
-          {loadError}
         </div>
       </main>
     );
