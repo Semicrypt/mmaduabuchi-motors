@@ -277,7 +277,54 @@ export default function Home() {
 
   return (
     <main className="w-full overflow-x-hidden bg-[#F6F0E6] text-[#211A13]">
-      {/* TOP BAR */}
+      {/* MOBILE TRUST / ADDRESS PANEL */}
+      <div className="relative z-[75] w-full border-b border-[#D6B36A]/20 bg-[#2B2116] text-white lg:hidden">
+        <a
+          href="#locations"
+          className="grid grid-cols-[86px_1fr] gap-3 border-b border-white/10 px-4 py-2.5"
+        >
+          <span className="flex items-start gap-1.5 text-[8px] font-bold uppercase tracking-[0.14em] text-[#D6B36A]">
+            <FiMapPin className="mt-0.5 shrink-0" />
+            Cotonou HQ
+          </span>
+
+          <span className="text-[9px] leading-[1.45] text-white/85">
+            Park Royale Mivvo, Cotonou, Benin Republic
+          </span>
+        </a>
+
+        <a
+          href="#locations"
+          className="grid grid-cols-[86px_1fr] gap-3 border-b border-white/10 px-4 py-2.5"
+        >
+          <span className="flex items-start gap-1.5 text-[8px] font-bold uppercase tracking-[0.14em] text-[#D6B36A]">
+            <FiMapPin className="mt-0.5 shrink-0" />
+            Lagos
+          </span>
+
+          <span className="text-[9px] leading-[1.45] text-white/85">
+            Ajayi Farm Ltd, KM 19 Agege Motor Road, opposite Pavillon Hotel,
+            Ikeja, Lagos
+          </span>
+        </a>
+
+        <a
+          href="#locations"
+          className="grid grid-cols-[86px_1fr] gap-3 px-4 py-2.5"
+        >
+          <span className="flex items-start gap-1.5 text-[8px] font-bold uppercase tracking-[0.14em] text-[#D6B36A]">
+            <FiMapPin className="mt-0.5 shrink-0" />
+            Onitsha
+          </span>
+
+          <span className="text-[9px] leading-[1.45] text-white/85">
+            No. 1 Igwebuike Odu Street, Omagba Phase 1, 3rd Gate, Onitsha,
+            Anambra State
+          </span>
+        </a>
+      </div>
+
+      {/* DESKTOP TOP BAR */}
       <div className="fixed left-0 top-0 z-[70] hidden h-9 w-full bg-[#2B2116] text-white lg:block">
         <div className="mx-auto flex h-full max-w-[1600px] items-center justify-between px-10">
           <div className="flex items-center gap-8 text-[11px] text-white/75">
@@ -333,7 +380,7 @@ export default function Home() {
       </div>
 
       {/* NAVBAR */}
-      <header className="fixed left-0 top-0 z-[60] w-full border-b border-[#5B421F]/10 bg-[#F7F1E7]/95 shadow-[0_8px_30px_rgba(83,58,23,0.06)] backdrop-blur-xl lg:top-9">
+      <header className="sticky left-0 top-0 z-[60] w-full border-b border-[#5B421F]/10 bg-[#F7F1E7]/95 shadow-[0_8px_30px_rgba(83,58,23,0.06)] backdrop-blur-xl lg:fixed lg:top-9">
         <nav className="mx-auto flex h-[88px] w-full max-w-[1600px] items-center justify-between gap-3 px-4 sm:px-5 md:h-[82px] md:px-8 lg:px-10">
           <a href="#home" className="min-w-0">
             <BrandLogo />
@@ -422,7 +469,7 @@ export default function Home() {
       {/* HERO */}
       <section
         id="home"
-        className="relative overflow-hidden bg-[#EEE5D8] pt-[112px] lg:min-h-[820px] lg:pt-[155px]"
+        className="relative overflow-hidden bg-[#EEE5D8] pt-3 sm:pt-4 lg:min-h-[820px] lg:pt-[155px]"
       >
         {/* DESKTOP SHOWROOM DECOR */}
         <div className="pointer-events-none absolute inset-0 hidden lg:block">
